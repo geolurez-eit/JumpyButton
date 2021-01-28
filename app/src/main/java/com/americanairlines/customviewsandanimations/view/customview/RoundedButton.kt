@@ -6,15 +6,13 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
-import java.util.*
 
-class RoundedButton(context: Context, attributeSet: AttributeSet?): View(context, attributeSet) {
+class RoundedButton(context: Context, attributeSet: AttributeSet?) : View(context, attributeSet) {
     //Popular interview question - How do I create a customView
     //Answer: Extend from the view class and override the onDraw method
 
-    constructor(context: Context): this(context, null)
+    constructor(context: Context) : this(context, null)
 
     private var paint: Paint = Paint()
 
@@ -29,27 +27,31 @@ class RoundedButton(context: Context, attributeSet: AttributeSet?): View(context
 
     var incX = 0
     var incY = 0
-    var speedX= 1
-    var speedY= 1
+    var speedX = 10
+    var speedY = 10
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
-        if(midX + circleRadius > width.toFloat())
+        if (midX + circleRadius > width.toFloat() || midX - circleRadius < 0)
             speedX *= -1
+       if (midY + circleRadius > height.toFloat() || midY - circleRadius < 0)
+            speedY *= -1
 
-        midX = width/2.toFloat() + incX
-        midY = height/2.toFloat() + incY
+        incX += speedX //This line needs to come before the midX is updated
+        incY += speedY //This line needs to come before the midY is updated
+
+        midX = width / 2.toFloat() + incX
+        midY = height / 2.toFloat() + incY
 
         paint.color = Color.BLACK
-        incX += speedX
         //incY += speedY
 
 
         canvas.drawCircle(midX, midY, circleRadius, paint)
 
         //if(midY + circleRadius > height || midY + circleRadius <= 0)
-          //  speedY *= -1
+        //  speedY *= -1
 
         paint.color = Color.CYAN
         paint.textSize = 40f
@@ -57,7 +59,7 @@ class RoundedButton(context: Context, attributeSet: AttributeSet?): View(context
         val rect = Rect()
         paint.getTextBounds(buttonText, 0, buttonText.length, rect)
 
-        canvas.drawText(buttonText, midX- rect.width()/2, midY + rect.height()/2, paint)
+        canvas.drawText(buttonText, midX - rect.width() / 2, midY + rect.height() / 2, paint)
 
         invalidate()
 
